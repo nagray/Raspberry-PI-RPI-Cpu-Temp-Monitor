@@ -1,6 +1,8 @@
 #include <fstream>
 #include <string>
 #include <iostream>
+#include <math.h>
+#include <iomanip>
 
 using namespace std;
 
@@ -8,14 +10,15 @@ class GetCPUTemp
 {
 public:
     GetCPUTemp();
-    double getCurrentTemperature();
+    float getCurrentTemperature();
 };
 
-double GetCPUTemp::getCurrentTemperature()
+//double GetCPUTemp::getCurrentTemperature()
+float GetCPUTemp::getCurrentTemperature()
 {
     string val;
     string preparedTemp;
-    double temperature;
+    float temperature;
 
     ifstream temperatureFile ("/sys/class/thermal/thermal_zone0/temp");
 
@@ -39,9 +42,14 @@ GetCPUTemp::GetCPUTemp() { }
 
 int main (void)
 {
-	double temp;
+	float temp;
+	float temp2;
+	float val1;
+	float val2;
+	float val3;
+
 	GetCPUTemp Check=GetCPUTemp();
 
 	temp=Check.getCurrentTemperature();
-	cout << "Temp OK - CPU Temperature is "<<temp<<"°C"<<endl;
+	cout << "Temp OK - CPU Temperature is "<<std::setprecision(4)<<temp<<" | cputemp="<<std::setprecision(4)<<temp<<";60;70"<<endl;
 }

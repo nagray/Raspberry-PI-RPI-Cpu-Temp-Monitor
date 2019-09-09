@@ -1,72 +1,77 @@
 #include <fstream>
 #include <string>
 #include <iostream>
-#include "reg.h"
-#include "postman.h"
-
-#ifndef uint32
-#define uint32 uint32_t
-#endif
-
-#ifndef byte
-#define byte int8_t
-#endif
-
-#define READ_OFFSET 0x00
-#define POLL_OFFSET 0x10
-#define SENDER_OFFSET 0x14
-#define STATUS_OFFSET 0x18
-#define CONFIG_OFFSET 0x1c
-#define WRITE_OFFSET 0x20
-
-// This bit is set in the status register if there is no space to write into the mailbox
-#define MAIL_FULL 0x80000000
-
-// This bit is set in the status register if there is nothing to read from the mailbox
-#define MAIL_EMPTY 0x40000000
-
-// Base address for the mailbox register
-#define MAIL_BASE 0xB880
+#include <math.h>
+#include <iomanip>
+#include <fcntl.h>
+#include "gpu_temp.h"
 
 using namespace std;
 
 class GetGPUTemp
 {
 public:
-	uint32 ReadMailbox(byte channel);
+    GetGPUTemp();
+//    float getCurrentTemperature(struct bcm2835_peripheral*);
+    float getCurrentTemperature(void);
 };
 
-uint32 GetGPUTemp::ReadMailbox(byte channel)
+float GetGPUTemp::getCurrentTemperature()
+//float GetGPUTemp::getCurrentTemperature(struct bcm2835_peripheral *p)
+//int GetGPUTemp::map_peripheral(struct bcm2835_peripheral *p)
 {
-	channel &= 0xf;
-	uint32 data;
-	readMemMappedReg<uint32>(MAIL_BASE, READ_OFFSET);
-
-	// Loop until we receive something from the requested channel
-//	for (;;)
+	float temperature;
+//	// Map periphreal space
+//	// Open /dev/mem
+//	if ((p->mem_fd = open("/dev/mem", O_RDWR|O_SYNC) ) < 0)
 //	{
-//		while (ReadMemMappedReg<uint32>(MAIL_BASE, STATUS_OFFSET) & MAIL_EMPTY) != 0)
-//		{
-//			// Wait for data
-//		}
-//		// Read the data
-//		data = readMemMappedReg<uint32>(MAIL_BASE, READ_OFFSET);
-//		byte readChannel = data & 0xF;
-		data >>= 4;
-//		// Return it straight away if it's for the requested channel
-//		if (readChannel == channel)
-		return data;
+//		printf("Failed to open /dev/mem, try checking permissions.\n");
+//		return -1;
 //	}
+//
+//	// Call to mmap function
+//	p->map = mmap(
+//		NULL,
+//		BLOCK_SIZE,
+//		PROT_READ|PROT_WRITE,
+//		MAP_SHARED,
+//		p->mem_fd,      // File descriptor to physical memory virtual file '/dev/mem'
+//		p->addr_p       // Address in physical map that we want this memory block to expose
+//	);
+//
+//	// If we can't map return error
+//	if (p->map == MAP_FAILED)
+//	{
+//		perror("mmap");
+//		return -1;
+//	}
+//
+//	// Otherwise we have a pointer to the mapped space
+//	p->addr = (volatile unsigned int *)p->map;
+//
+//	//Poke at the map to get the temperature
+//	
+//	// Unmap the memory space
+//	munmap(p->map, BLOCK_SIZE);
+//	close(p->mem_fd);
+//
+	temperature=34.50;
+	return temperature;
 }
 
+GetGPUTemp::GetGPUTemp() { }
 
-int main (void)
+int main (int argc, char** argv)
 {
-	byte data;
-	uint32 temp;
-	GetGPUTemp Temp=GetGPUTemp();
-	temp=Temp.ReadMailbox(data);
-//	cout << "data: "<<data<<endl;
-//	cout << "temp: "<<temp<<endl;
-}
-
+	float temp;
+	int high = 60;
+	int critical = 70;
+	if(argc>=4 || argc == 2){return -1;}
+	if(argc==3){
+		critical = atoi(argv[2]);
+		high = atoi(argv[1]);
+	}
+	GetGPUTemp Check=GetGPUTemp(); // GetGPUTemp constructor
+	temp=Check.getCurrentTemperature(); // Get the GPU temp
+//	temp=Check.getCurrentTemperature(gpio); // Get the GPU temp
+	cout << "Temp OK - GPU Temperature is "<<std::setprecision(4)<<temp<<" | gputemp="<<std::setprecision(4)<<temp<<";"<<high<<";"<<critical<<endl; }
