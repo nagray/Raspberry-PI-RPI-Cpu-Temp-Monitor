@@ -1,5 +1,5 @@
 CXX = g++
-CPPFLAGS = -std=c++11 -g -I/opt/vc/include -L/opt/vc/lib -lbcm_host
+CPPFLAGS = -std=c++11 -g -I/opt/vc/include -L/opt/vc/lib -lbcm_host -Wall -Wextra -Wconversion
 RM = rm -f
 
 CPUSRCS=cpu_temp.cc
@@ -17,7 +17,7 @@ check_cpu_temp: cpu_temp.cc
 	$(CXX) $(CPPFLAGS) -o check_cpu_temp $(CPUSRCS)
 check_gpu_temp: gpu_temp.cc gpu_temp.h
 	$(CXX) $(CPPFLAGS) -o check_gpu_temp $(GPUSRCS)
-test: test.cc gpu_temp.h
+test: test.cc test.h
 	$(CXX) $(CPPFLAGS) -o test $(TESTSRCS)
 
 clean:

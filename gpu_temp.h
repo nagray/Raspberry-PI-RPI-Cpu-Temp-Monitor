@@ -16,7 +16,7 @@
 #define BCM2708_PERI_BASE_3       0x3F000000    // Peripheral Base for RPi3
 #define BCM2708_PERI_BASE_4       0xFE000000    // Peripheral Base for RPi4
 #define BCM2708_PERI_BASE BCM2708_PERI_BASE_4   // We are compiling for RPi4
-#define BLOCK_SIZE   (0x10000)
+#define BLOCK_SIZE   (0x1000)
 #define MAILBOX_BASE 0xFE000000 + 0x200000 + 0xB000
 
 #define GPIO_BASE 0x200000
@@ -29,7 +29,7 @@
 #define MAIL_EMPTY      0x40000000              /* Mailbox Status Register: Mailbox Empty */
 #define MAIL_FULL       0x80000000              /* Mailbox Status Register: Mailbox Full  */
 #define SUCCESS         0x80000000
-//#define MAILBOX ((volatile __attribute__((aligned(4))) struct MailBoxRegisters*)(uintptr_t)(MAILBOX_BASE))
+#define MAILBOX ((volatile __attribute__((aligned(4))) struct MailBoxRegisters*)(uintptr_t)(MAILBOX_BASE))
 
 using namespace std;
 
