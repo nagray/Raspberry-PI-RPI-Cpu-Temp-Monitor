@@ -37,5 +37,5 @@ struct mailbox_t {
 };
 
 mailbox_t* map_mailbox();
-uint32_t read_mailbox(mailbox_t mailbox, int channel);
+uint32_t read_mailbox(mailbox_t mailbox, uint32_t channel);
 
